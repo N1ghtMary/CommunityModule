@@ -1,0 +1,6 @@
+@CommunityModule_HostAddress = http://localhost:5043
+
+GET {{CommunityModule_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
