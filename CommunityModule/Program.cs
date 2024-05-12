@@ -4,11 +4,13 @@ using Repository.ArticleRepository;
 using Repository.CategoryRepository;
 using Repository.CommentRepository;
 using Repository.GroupRepository;
+using Repository.StatisticsRepository;
 using Repository.UserRepository;
 using Services.ArticleService;
 using Services.CategoryService;
 using Services.CommentService;
 using Services.GroupService;
+using Services.StatisticsService;
 using Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,9 @@ builder.Services.AddTransient<IArticleService, ArticleService>();
 builder.Services.AddScoped(typeof(ICommentRepository),
     typeof(CommentRepository));
 builder.Services.AddTransient<ICommentService, CommentService>();
+builder.Services.AddScoped(typeof(IStatisticsRepository),
+    typeof(StatisticsRepository));
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 
 var app=builder.Build();
 

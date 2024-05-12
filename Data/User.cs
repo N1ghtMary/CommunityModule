@@ -30,7 +30,7 @@ public class UserMap
 {
     public UserMap(EntityTypeBuilder<User> entityTypeBuilder)
     {
-        entityTypeBuilder.HasKey(e => e.UserId);
+        entityTypeBuilder.HasKey(e => e.UserId);//no need if :user
         entityTypeBuilder.Property(e => e.UserFullName).IsRequired();
         entityTypeBuilder.Property(e => e.City);
         entityTypeBuilder.Property(e => e.Email);

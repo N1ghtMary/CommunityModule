@@ -16,6 +16,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
         if (article == null) return null;
         return new ArticleDTO
         {
+             ArticleId = article.ArticleId,
              Title = article.Title,
              ArticleText =article.ArticleText,
              ArticlePublicationDate =article.ArticlePublicationDate,
@@ -33,6 +34,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
         {
             articleDtos.Add(new ArticleDTO
             {
+                ArticleId = article.ArticleId,
                 Title = article.Title,
                 ArticleText =article.ArticleText,
                 ArticlePublicationDate =article.ArticlePublicationDate,

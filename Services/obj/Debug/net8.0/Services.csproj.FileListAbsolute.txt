@@ -19,3 +19,4 @@ C:\Users\Maria\RiderProjects\CommunityModule\Services\obj\Debug\net8.0\Services.
 C:\Users\Maria\RiderProjects\CommunityModule\Services\obj\Debug\net8.0\ref\Services.dll
 C:\Users\Maria\RiderProjects\CommunityModule\Services\bin\Debug\net8.0\Services.runtimeconfig.json
 C:\Users\Maria\RiderProjects\CommunityModule\Services\obj\Debug\net8.0\Services.genruntimeconfig.cache
+C:\Users\Maria\RiderProjects\CommunityModule\Services\obj\Debug\net8.0\Services.sourcelink.json

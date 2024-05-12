@@ -16,6 +16,7 @@ public class UserRepository(ApplicationContext context):IUserRepository
         if (user == null) return null;
         return new UserDTO
         {
+            UserId = user.UserId,
             UserFullName = user.UserFullName,
             BirthDate = user.BirthDate,
             City=user.City,

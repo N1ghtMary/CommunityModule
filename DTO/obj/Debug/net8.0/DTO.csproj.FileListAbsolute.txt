@@ -11,3 +11,4 @@ C:\Users\Maria\RiderProjects\CommunityModule\DTO\obj\Debug\net8.0\DTO.pdb
 C:\Users\Maria\RiderProjects\CommunityModule\DTO\obj\Debug\net8.0\ref\DTO.dll
 C:\Users\Maria\RiderProjects\CommunityModule\DTO\bin\Debug\net8.0\DTO.runtimeconfig.json
 C:\Users\Maria\RiderProjects\CommunityModule\DTO\obj\Debug\net8.0\DTO.genruntimeconfig.cache
+C:\Users\Maria\RiderProjects\CommunityModule\DTO\obj\Debug\net8.0\DTO.sourcelink.json

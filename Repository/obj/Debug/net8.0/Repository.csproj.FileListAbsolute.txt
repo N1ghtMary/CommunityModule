@@ -17,3 +17,4 @@ C:\Users\Maria\RiderProjects\CommunityModule\Repository\obj\Debug\net8.0\Reposit
 C:\Users\Maria\RiderProjects\CommunityModule\Repository\obj\Debug\net8.0\ref\Repository.dll
 C:\Users\Maria\RiderProjects\CommunityModule\Repository\bin\Debug\net8.0\Repository.runtimeconfig.json
 C:\Users\Maria\RiderProjects\CommunityModule\Repository\obj\Debug\net8.0\Repository.genruntimeconfig.cache
+C:\Users\Maria\RiderProjects\CommunityModule\Repository\obj\Debug\net8.0\Repository.sourcelink.json
