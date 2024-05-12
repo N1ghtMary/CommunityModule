@@ -22,8 +22,8 @@ public class StatisticsService(IStatisticsRepository statisticsRepository ):ISta
         return _statisticsRepository.GetArticles(id);
     }
 
-    public void ToggleLikeStatistics(int userId, int articleId)
+    public void ToggleLikeStatistics(ToggleStatisticsDTO dto)
     {
-     _statisticsRepository.ToggleLike(userId,articleId);   
+     _statisticsRepository.ToggleLike(dto);   
     }
 }

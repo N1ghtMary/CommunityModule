@@ -1,3 +1,4 @@
+using DTO.StatisticsDTO;
 using Microsoft.AspNetCore.Mvc;
 using Services.StatisticsService;
 
@@ -32,9 +33,9 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
 
     [Route("toggle")]
     [HttpPost]
-    public JsonResult ToggleLikeStatistics(int userId, int articleId)
+    public JsonResult ToggleLikeStatistics(ToggleStatisticsDTO dto)
     {
-        statisticsService.ToggleLikeStatistics(userId,articleId);
+        statisticsService.ToggleLikeStatistics(dto);
         return Json("completed");
     }
 }

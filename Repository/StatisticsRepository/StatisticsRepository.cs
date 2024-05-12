@@ -68,19 +68,20 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
         return statisticsDtos;
     }
 
-    public void ToggleLike(int userId, int articleId)
+    public void ToggleLike(ToggleStatisticsDTO dto)
     {
-        var user = _users.Where(u => u.UserId == userId);
-        var article = _articles.Where(a => a.ArticleId == articleId);
+        var user = _users.Where(u => u.UserId == dto.UserId);
+        var article = _articles.Where(a => a.ArticleId == dto.ArticleId);
         if (user == null || article == null) return;
-        var statistics = _statistics.FirstOrDefault(s => s.UserId == userId && s.ArticleId == articleId);
+        var statistics = _statistics.FirstOrDefault(s => 
+            s.UserId == dto.UserId && s.ArticleId == dto.ArticleId);
         if (statistics == null)
         {
             Statistics statisticsNew = new Statistics
             {
                 IsLike = true,
-                ArticleId = articleId,
-                UserId = userId
+                ArticleId = dto.ArticleId,
+                UserId = dto.UserId
             };
             _statistics.Add(statisticsNew);
         }
