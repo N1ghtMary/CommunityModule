@@ -3,14 +3,18 @@ using Repository;
 using Repository.ArticleRepository;
 using Repository.CategoryRepository;
 using Repository.CommentRepository;
+using Repository.FavoriteArticleRepository;
 using Repository.GroupRepository;
 using Repository.StatisticsRepository;
+using Repository.SubscriptionAuthorRepository;
 using Repository.UserRepository;
 using Services.ArticleService;
 using Services.CategoryService;
 using Services.CommentService;
+using Services.FavoriteArticleService;
 using Services.GroupService;
 using Services.StatisticsService;
+using Services.SubscriptionAuthorService;
 using Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +45,12 @@ builder.Services.AddTransient<ICommentService, CommentService>();
 builder.Services.AddScoped(typeof(IStatisticsRepository),
     typeof(StatisticsRepository));
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
+builder.Services.AddScoped(typeof(IFavoriteArticleRepository),
+    typeof(FavoriteArticleRepository));
+builder.Services.AddTransient<IFavoriteArticleService, FavoriteArticleService>();
+builder.Services.AddScoped(typeof(ISubscriptionAuthorRepository),
+    typeof(SubscriptionAuthorRepository));
+builder.Services.AddTransient<ISubscriptionAuthorService, SubscriptionAuthorService>();
 
 var app=builder.Build();
 
