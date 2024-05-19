@@ -3,7 +3,7 @@ using Repository.SubscriptionAuthorRepository;
 
 namespace Services.SubscriptionAuthorService;
 
-public class SubscriptionAuthorService(SubscriptionAuthorRepository subscriptionAuthorRepository):ISubscriptionAuthorService
+public class SubscriptionAuthorService(ISubscriptionAuthorRepository subscriptionAuthorRepository):ISubscriptionAuthorService
 {
     private ISubscriptionAuthorRepository _subscriptionAuthorRepository = subscriptionAuthorRepository;
 

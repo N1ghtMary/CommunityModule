@@ -75,7 +75,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
         _articles.Update(article);
         context.SaveChanges();
     }
-
+//TODO if after removing article author has no any articles he must lose subscription?
     public void Delete(int Id)
     {
         var article =_articles.SingleOrDefault(a => a.ArticleId == Id);

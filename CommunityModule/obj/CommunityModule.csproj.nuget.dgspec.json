@@ -201,7 +201,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\Maria\\RiderProjects\\CommunityModule\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\Maria\\RiderProjects\\CommunityModule\\Data\\Data.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

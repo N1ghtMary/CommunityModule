@@ -925,6 +925,9 @@
         }
       },
       "DTO/1.0.0": {
+        "dependencies": {
+          "Data": "1.0.0"
+        },
         "runtime": {
           "DTO.dll": {}
         }

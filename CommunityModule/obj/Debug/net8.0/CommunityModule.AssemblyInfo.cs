@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2b83479f43a111772199e7a117d3c32221065ab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c7a70f4b9cc00702f9d400e760e235a0e5811d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

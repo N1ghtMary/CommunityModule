@@ -7,5 +7,7 @@ public interface IStatisticsService
     List<StatisticsDTO> GetStatistics();
     List<StatisticsDTO> GetUserStatistics(int id);
     List<StatisticsDTO> GetArticleStatistics(int id);
-    void ToggleLikeStatistics(ToggleStatisticsDTO dto);
+    void LikeArticle(ToggleStatisticsDTO dto);
+    void DislikeArticle(ToggleStatisticsDTO dto);
+    void DeleteStatistics(int id);
 }

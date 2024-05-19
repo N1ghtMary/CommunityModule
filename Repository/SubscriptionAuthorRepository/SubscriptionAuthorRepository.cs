@@ -1,27 +1,44 @@
 using Data;
 using DTO.SubscriptionAuthorDTO;
+using DTO.UserDTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.SubscriptionAuthorRepository;
 
 public class SubscriptionAuthorRepository(ApplicationContext context):ISubscriptionAuthorRepository
 {
+    //TODO Check author must write articles. If user has no articles he can't be author
+    //TODO If toggle to false dont show subscriptions and likes
     private readonly ApplicationContext _context = context;
     private DbSet<SubscriptionAuthor> _subscriptionAuthor = context.Set<SubscriptionAuthor>();
     private DbSet<User> _users = context.Set<User>();
 
     public List<SubscriptionAuthorDTO> GetAll()
     {
-        var subscriptions = _subscriptionAuthor.ToList();
+        var subscriptions = _subscriptionAuthor
+            //.Include(sa=>sa.Author)
+            .Include(su=>su.User)
+            .ToList();
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
+        //TODO add author include and his email
+        
+        
         foreach (var subscription in subscriptions)
         {
+            //foreach (var user in subscription.User)
+            //{
+                
+            //}
             subscriptionsDtos.Add(new SubscriptionAuthorDTO
             {
                 SubscriptionId = subscription.SubscriptionId,
                 IsActive = subscription.IsActive,
                 AuthorId = subscription.AuthorId,
-                UserId = subscription.UserId
+                UserId = subscription.UserId,
+                User = new ShowUserInfoDTO()
+                {
+                    UserFullName = subscription.User.UserFullName
+                }
             });
         }
 

@@ -31,11 +31,27 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
         return Json(statistics);
     }
 
-    [Route("toggle")]
-    [HttpPost]
-    public JsonResult ToggleLikeStatistics(ToggleStatisticsDTO dto)
+    [Route("like")]
+    [HttpPatch]
+    public JsonResult LikeStatistics(ToggleStatisticsDTO dto)
     {
-        statisticsService.ToggleLikeStatistics(dto);
+        statisticsService.LikeArticle(dto);
         return Json("completed");
+    }
+    
+    [Route("dislike")]
+    [HttpPatch]
+    public JsonResult DislikeStatistics(ToggleStatisticsDTO dto)
+    {
+        statisticsService.DislikeArticle(dto);
+        return Json("completed");
+    }
+
+    [Route("delete/{id}")]
+    [HttpDelete]
+    public JsonResult DeleteStatistics(int id)
+    {
+        statisticsService.DeleteStatistics(id);
+        return Json("deleted");
     }
 }
