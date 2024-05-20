@@ -8,6 +8,8 @@ public class FavoriteArticleRepository(ApplicationContext context):IFavoriteArti
 {
     private readonly ApplicationContext _context = context;
     private DbSet<FavoriteArticle> _favoritearticle = context.Set<FavoriteArticle>();
+    private DbSet<User> _users = context.Set<User>();
+    private DbSet<Article> _articles = context.Set<Article>();
 
     public List<FavoriteArticleDTO> GetAll()
     {
@@ -46,12 +48,22 @@ public class FavoriteArticleRepository(ApplicationContext context):IFavoriteArti
 
     public void Insert(CreateFavoriteArticleDTO dto)
     {
-        FavoriteArticle favoriteArticle = new FavoriteArticle
+        var user = _users.Where(u => u.UserId == dto.UserId);
+        var article = _articles.Where(a => a.ArticleId == dto.ArticleId);
+        if (user == null || article == null) return;
+        var favorites = _favoritearticle.FirstOrDefault(s => 
+            s.UserId == dto.UserId && s.ArticleId == dto.ArticleId);
+        if (favorites == null)
         {
-            ArticleId = dto.ArticleId,
-            UserId = dto.UserId,
-        };
-        _favoritearticle.Add(favoriteArticle);
+            FavoriteArticle favoriteArticle = new FavoriteArticle
+            {
+                ArticleId = dto.ArticleId,
+                UserId = dto.UserId,
+            };
+            _favoritearticle.Add(favoriteArticle);
+        }
+        else _favoritearticle.Remove(favorites);
+
         context.SaveChanges();
     }
 

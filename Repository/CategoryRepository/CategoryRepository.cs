@@ -11,6 +11,8 @@ public class CategoryRepository(ApplicationContext context):ICategoryRepository
     private DbSet<Group> _groups = context.Set<Group>();
     private DbSet<Article> _articles = context.Set<Article>();
     private DbSet<Comments> _comments = context.Set<Comments>();
+    private DbSet<FavoriteArticle> _favoriteArticles = context.Set<FavoriteArticle>();
+    private DbSet<Statistics> _statistics = context.Set<Statistics>();
     
     public CategoryDTO Get(int Id)
     {
@@ -73,6 +75,11 @@ public class CategoryRepository(ApplicationContext context):ICategoryRepository
                 var comments = _comments
                     .Where(c => c.ArticleId == article.ArticleId);
                 _comments.RemoveRange(comments);
+                var favoritesArticle = _favoriteArticles.Where(f => f.ArticleId == article.ArticleId);
+                _favoriteArticles.RemoveRange(favoritesArticle);
+
+                var statisticsArticle = _statistics.Where(s => s.ArticleId == article.ArticleId);
+                _statistics.RemoveRange(statisticsArticle);
             }
             _articles.RemoveRange(articles);
         }

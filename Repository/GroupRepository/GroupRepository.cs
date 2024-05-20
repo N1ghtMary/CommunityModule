@@ -11,6 +11,8 @@ public class GroupRepository(ApplicationContext context):IGroupRepository
     private DbSet<Group> _groups = context.Set<Group>();
     private DbSet<Article> _articles = context.Set<Article>();
     private DbSet<Comments> _comments = context.Set<Comments>();
+    private DbSet<FavoriteArticle> _favoriteArticles = context.Set<FavoriteArticle>();
+    private DbSet<Statistics> _statistics = context.Set<Statistics>();
 
     public GroupDTO Get(int Id)
     {
@@ -71,6 +73,10 @@ public class GroupRepository(ApplicationContext context):IGroupRepository
         {
             var commentsList = _comments.Where(cl => cl.ArticleId == article.ArticleId);
             _comments.RemoveRange(commentsList);
+            var favoritesArticle = _favoriteArticles.Where(f => f.ArticleId == article.ArticleId);
+            _favoriteArticles.RemoveRange(favoritesArticle);
+            var statisticsArticle = _statistics.Where(s => s.ArticleId == article.ArticleId);
+            _statistics.RemoveRange(statisticsArticle);
         }
         _articles.RemoveRange(articlesList);
         _groups.Remove(group);

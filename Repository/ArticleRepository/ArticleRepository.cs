@@ -9,7 +9,9 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
     private readonly ApplicationContext _context = context;
     private DbSet<Article> _articles = context.Set<Article>();
     private DbSet<Comments> _comments = context.Set<Comments>();
-
+    private DbSet<FavoriteArticle> _favoriteArticles = context.Set<FavoriteArticle>();
+    private DbSet<Statistics> _statistics = context.Set<Statistics>();
+    
     public ArticleDTO Get(int Id)
     {
         var article = _articles.SingleOrDefault(a => a.ArticleId == Id);
@@ -84,6 +86,11 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
             .Where(cl => cl.ArticleId == article.ArticleId)
             .ToList();
         _comments.RemoveRange(commentList);
+        var favoritesArticle = _favoriteArticles.Where(f => f.ArticleId == article.ArticleId);
+        _favoriteArticles.RemoveRange(favoritesArticle);
+
+        var statisticsArticle = _statistics.Where(s => s.ArticleId == article.ArticleId);
+        _statistics.RemoveRange(statisticsArticle);
         _articles.Remove(article);
         context.SaveChanges();
     }
