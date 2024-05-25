@@ -16,7 +16,7 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
     public List<SubscriptionAuthorDTO> GetAll()
     {
         var subscriptions = _subscriptionAuthor
-            //.Include(sa=>sa.Author)
+            .Include(sa=>sa.Author)
             .Include(su=>su.User)
             .ToList();
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
@@ -34,14 +34,18 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
                 SubscriptionId = subscription.SubscriptionId,
                 IsActive = subscription.IsActive,
                 AuthorId = subscription.AuthorId,
+                Author = new ShowUserInfoDTO()
+                {
+                    Login = subscription.Author.Login
+                },
                 UserId = subscription.UserId,
                 User = new ShowUserInfoDTO()
                 {
-                    UserFullName = subscription.User.UserFullName
+                    Login = subscription.User.Login
                 }
             });
         }
-
+        
         return subscriptionsDtos;
     }
 
@@ -52,13 +56,16 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
         foreach (var subscription in subscriptionsUser)
         {
-            subscriptionsDtos.Add(new SubscriptionAuthorDTO
+            if (subscription.IsActive)
             {
-                SubscriptionId = subscription.SubscriptionId,
-                IsActive = subscription.IsActive,
-                AuthorId = subscription.AuthorId,
-                UserId = subscription.UserId
-            });
+                subscriptionsDtos.Add(new SubscriptionAuthorDTO
+                {
+                    SubscriptionId = subscription.SubscriptionId,
+                    IsActive = subscription.IsActive,
+                    AuthorId = subscription.AuthorId,
+                    UserId = subscription.UserId
+                });
+            }
         }
 
         return subscriptionsDtos;
@@ -66,18 +73,22 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
 
     public List<SubscriptionAuthorDTO> GetAuthors(int id)
     {
-        var subscriptionsAuthor = _subscriptionAuthor.Where(sa => sa.AuthorId == id);
+        var subscriptionsAuthor = _subscriptionAuthor
+            .Where(sa => sa.AuthorId == id);
         if (subscriptionsAuthor == null) return null;
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
         foreach (var subscription in subscriptionsAuthor)
         {
-            subscriptionsDtos.Add(new SubscriptionAuthorDTO
+            if(subscription.IsActive)
             {
-                SubscriptionId = subscription.SubscriptionId,
-                IsActive = subscription.IsActive,
-                AuthorId = subscription.AuthorId,
-                UserId = subscription.UserId
-            });
+                subscriptionsDtos.Add(new SubscriptionAuthorDTO
+                {
+                    SubscriptionId = subscription.SubscriptionId,
+                    IsActive = subscription.IsActive,
+                    AuthorId = subscription.AuthorId,
+                    UserId = subscription.UserId
+                });
+            }
         }
 
         return subscriptionsDtos;

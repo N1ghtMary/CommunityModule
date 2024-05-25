@@ -12,5 +12,6 @@ public class SubscriptionAuthorDTO
     //public User User { get; set; }
     //public User Author { get; set; }
     public ShowUserInfoDTO User { get; set; }
+    public ShowUserInfoDTO Author { get; set; }
 }
 

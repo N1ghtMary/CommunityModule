@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using DTO.GroupDTO;
+using DTO.UserDTO;
 
 namespace DTO.ArticleDTO;
 
@@ -9,13 +11,15 @@ public class CreateArticleDTO
     public string Title { get; set; }
     [Required (ErrorMessage = "Поле \"Текст статтьи\" обязательно для заполнения")]
     public string ArticleText { get; set; }
-    [Required (ErrorMessage = "Поле \"Дата публикации\" обязательно для заполнения")]
-    [RegularExpression("[0-9]{4}-[0-9]{2}-[0-9]{2}",ErrorMessage = "Неверно введена дата публикации")]
-    public DateTime ArticlePublicationDate { get; set; }
+   // [Required (ErrorMessage = "Поле \"Дата публикации\" обязательно для заполнения")] 
+    //[RegularExpression("[0-9]{4}-[0-9]{2}-[0-9]{2}",ErrorMessage = "Неверно введена дата публикации")]
+   // public DateTime ArticlePublicationDate { get; set; }
     [Required (ErrorMessage = "Поле \"Идентификатор пользователя\" обязательно для заполнения")]
-    public int UserId { get; set; }
-    [Required (ErrorMessage = "Поле \"Идентификатор группы\" обязательно для заполнения")]
-    public int GroupId { get; set; }
-    [Required (ErrorMessage = "Поле \"Просмотры\" обязательно для заполнения")]
-    public int Views { get; set; }
+    public ShowUserInfoDTO User { get; set; }
+   // public int UserId { get; set; }
+   [Required(ErrorMessage = "Поле \"Идентификатор группы\" обязательно для заполнения")]
+   public ShowGroupInfoDTO Group { get; set; }
+   //  public int GroupId { get; set; }
+   //[Required (ErrorMessage = "Поле \"Просмотры\" обязательно для заполнения")] 
+   //public int Views { get; set; }
 }

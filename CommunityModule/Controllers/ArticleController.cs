@@ -1,4 +1,5 @@
 using DTO.ArticleDTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Services.ArticleService;
 
@@ -13,6 +14,7 @@ public class ArticleController(IArticleService articleService):Controller
     public JsonResult GetArticle(int id)
     {
         var article = articleService.GetArticle(id);
+        if (article == null) return Json("Invalid article");
         return Json(article);
     }
     
@@ -20,30 +22,41 @@ public class ArticleController(IArticleService articleService):Controller
     public JsonResult GetArticles()
     {
         var articles = articleService.GetArticles();
+        if (articles == null) return Json("Empty list");
         return Json(articles);
     }
     
     [Route("create")]
     [HttpPost]
-    public JsonResult CreateArticle(CreateArticleDTO dto)
+    public async Task<IActionResult> CreateArticle(CreateArticleDTO dto)
     {
-        articleService.InsertArticle(dto);
-        return Json("created");
+       Task<IActionResult> result=  articleService.InsertArticle(dto);
+        //if (result is BadRequestObjectResult) return (BadRequest)result.ToString();
+        return await result;
     }
     
     [Route("update")]
     [HttpPatch]
-    public JsonResult UpdateArticle(UpdateArticleDTO dto)
+    public async Task<IActionResult> UpdateArticle(UpdateArticleDTO dto)
     {
-        articleService.UpdateArticle(dto);
-        return Json("updated");
+        Task<IActionResult> result = articleService.UpdateArticle(dto);
+        return await result;
+    }
+
+    [Route("increaseViews/{id}")]
+    [HttpPatch]
+    public async Task<IActionResult> IncreaseViewArticle(int id)
+    {
+        //if (id == null) return Json("Invalid id");
+        Task<IActionResult> result = articleService.IncreaseViewsArticle(id);
+        return await result;
     }
     
     [Route("delete/{id}")]
     [HttpDelete]
-    public JsonResult DeleteArticle(int id)
+    public async Task<IActionResult> DeleteArticle(int id)
     {
-        articleService.DeleteArticle(id);
-        return Json("deleted");
+        Task<IActionResult> result = articleService.DeleteArticle(id);
+        return await result;
     }
 }

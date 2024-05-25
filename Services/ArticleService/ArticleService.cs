@@ -1,4 +1,5 @@
 using DTO.ArticleDTO;
+using Microsoft.AspNetCore.Mvc;
 using Repository.ArticleRepository;
 
 namespace Services.ArticleService;
@@ -7,9 +8,9 @@ public class ArticleService(IArticleRepository articleRepository) : IArticleServ
 {
     private IArticleRepository _articleRepository = articleRepository;
 
-    public ArticleDTO GetArticle(int Id)
+    public ArticleDTO GetArticle(int id)
     {
-        return _articleRepository.Get(Id);
+        return _articleRepository.Get(id);
     }
 
     public List<ArticleDTO> GetArticles()
@@ -17,18 +18,22 @@ public class ArticleService(IArticleRepository articleRepository) : IArticleServ
         return _articleRepository.GetAll();
     }
 
-    public void InsertArticle(CreateArticleDTO dto)
+    public async Task<IActionResult> InsertArticle(CreateArticleDTO dto)
     {
-        _articleRepository.Insert(dto);
+        return await _articleRepository.Insert(dto);
     }
 
-    public void UpdateArticle(UpdateArticleDTO dto)
+    public async Task<IActionResult> UpdateArticle(UpdateArticleDTO dto)
     {
-        _articleRepository.Update(dto);
+        return await _articleRepository.Update(dto);
     }
 
-    public void DeleteArticle(int Id)
+    public async Task<IActionResult> IncreaseViewsArticle(int id)
     {
-        _articleRepository.Delete(Id);
+       return await _articleRepository.Views(id);
+    }
+    public async Task<IActionResult> DeleteArticle(int id)
+    {
+        return await _articleRepository.Delete(id);
     }
 }

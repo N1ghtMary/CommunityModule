@@ -1,3 +1,7 @@
+using Data;
+using DTO.GroupDTO;
+using DTO.UserDTO;
+
 namespace DTO.ArticleDTO;
 
 public class ArticleDTO
@@ -6,7 +10,7 @@ public class ArticleDTO
     public string Title { get; set; }
     public string ArticleText { get; set; }
     public DateTime ArticlePublicationDate { get; set; }
-    public int UserId { get; set; }
-    public int GroupId { get; set; }
+    public ShowUserInfoDTO User { get; set; }
+    public ShowGroupInfoDTO Group { get; set; }
     public int Views { get; set; }
 }

@@ -1,12 +1,14 @@
 using DTO.ArticleDTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Services.ArticleService;
 
 public interface IArticleService
 {
-    ArticleDTO GetArticle(int Id);
+    ArticleDTO GetArticle(int id);
     List<ArticleDTO> GetArticles();
-    void InsertArticle(CreateArticleDTO dto);
-    void UpdateArticle(UpdateArticleDTO dto);
-    void DeleteArticle(int Id);
+    Task<IActionResult> InsertArticle(CreateArticleDTO dto);
+    Task<IActionResult> UpdateArticle(UpdateArticleDTO dto);
+    Task<IActionResult> IncreaseViewsArticle(int id);
+    Task<IActionResult> DeleteArticle(int id);
 }
