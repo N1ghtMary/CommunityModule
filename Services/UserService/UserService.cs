@@ -1,4 +1,6 @@
+using Data;
 using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
 using Repository.UserRepository;
 
 namespace Services.UserService;
@@ -7,19 +9,19 @@ public class UserService(IUserRepository userRepository) : IUserService
 {
     private IUserRepository _userRepository = userRepository;
 
-    public UserDTO GetUser(int Id)
+    public async Task<UserDTO> GetUser(string id)
     {
-        return _userRepository.Get(Id);
+        return await _userRepository.Get(id);
     }
 
-    public List<UserDTO> GetUsers()
+    public Task<List<User>> GetUsers()
     {
         return _userRepository.GetAll();
     }
 
-    public void InsertUser(CreateUserDTO dto)
+    public async Task<IdentityResult> InsertUser(CreateUserDTO dto)
     {
-        _userRepository.Insert(dto);
+        return await _userRepository.Insert(dto);
     }
 
     public void UpdateUser(UpdateUserDTO dto)
@@ -27,8 +29,8 @@ public class UserService(IUserRepository userRepository) : IUserService
         _userRepository.Update(dto);
     }
 
-    public void DeleteUser(int Id)
+    public void DeleteUser(string id)
     {
-        _userRepository.Delete(Id);
+        _userRepository.Delete(id);
     }
 }

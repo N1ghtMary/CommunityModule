@@ -10,7 +10,7 @@ public class Comments
     [MaxLength(1000)]
     public string CommentText { get; set; }
     public DateTime CommentPublicationDate { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public int ArticleId { get; set; }
     
     public User User { get; set; }

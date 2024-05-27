@@ -1,11 +1,12 @@
 using DTO.SubscriptionAuthorDTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Services.SubscriptionAuthorService;
 
 public interface ISubscriptionAuthorService
 {
     List<SubscriptionAuthorDTO> GetSubscriptions();
-    List<SubscriptionAuthorDTO> GetUserSubscriptions(int id);
-    List<SubscriptionAuthorDTO> GetAuthorSubscriptions(int id);
-    void ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto);
+    List<SubscriptionAuthorDTO> GetUserSubscriptions(string id);
+    List<SubscriptionAuthorDTO> GetAuthorSubscriptions(string id);
+    Task<IActionResult> ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto);
 }

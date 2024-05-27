@@ -6,11 +6,12 @@ namespace Data;
 public class Article
 {
     public int ArticleId { get; set; }
+    
     [MaxLength(50)]
     public string Title { get; set; }
     public string ArticleText { get; set; }
     public DateTime ArticlePublicationDate { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public int GroupId { get; set; }
     public int Views { get; set; }
     

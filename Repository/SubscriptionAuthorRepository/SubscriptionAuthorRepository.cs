@@ -1,17 +1,20 @@
 using Data;
 using DTO.SubscriptionAuthorDTO;
 using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.SubscriptionAuthorRepository;
 
-public class SubscriptionAuthorRepository(ApplicationContext context):ISubscriptionAuthorRepository
+public class SubscriptionAuthorRepository(UserManager<User> userManager,
+    ApplicationContext context):ISubscriptionAuthorRepository
 {
     //TODO Check author must write articles. If user has no articles he can't be author
     //TODO If toggle to false dont show subscriptions and likes
     private readonly ApplicationContext _context = context;
     private DbSet<SubscriptionAuthor> _subscriptionAuthor = context.Set<SubscriptionAuthor>();
-    private DbSet<User> _users = context.Set<User>();
+    //private DbSet<User> _users = context.Set<User>();
 
     public List<SubscriptionAuthorDTO> GetAll()
     {
@@ -36,12 +39,12 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
                 AuthorId = subscription.AuthorId,
                 Author = new ShowUserInfoDTO()
                 {
-                    Login = subscription.Author.Login
+                    Email = subscription.Author.Email
                 },
                 UserId = subscription.UserId,
                 User = new ShowUserInfoDTO()
                 {
-                    Login = subscription.User.Login
+                    Email = subscription.User.Email
                 }
             });
         }
@@ -49,7 +52,7 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
         return subscriptionsDtos;
     }
 
-    public List<SubscriptionAuthorDTO> GetUsers(int id)
+    public List<SubscriptionAuthorDTO> GetUsers(string id)
     {
         var subscriptionsUser = _subscriptionAuthor.Where(su => su.UserId == id);
         if (subscriptionsUser == null) return null;
@@ -71,7 +74,7 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
         return subscriptionsDtos;
     }
 
-    public List<SubscriptionAuthorDTO> GetAuthors(int id)
+    public List<SubscriptionAuthorDTO> GetAuthors(string id)
     {
         var subscriptionsAuthor = _subscriptionAuthor
             .Where(sa => sa.AuthorId == id);
@@ -94,11 +97,11 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
         return subscriptionsDtos;
     }
 
-    public void ToggleActive(ToggleSubscriptionAuthorDTO dto)
+    public async Task<IActionResult> ToggleActive(ToggleSubscriptionAuthorDTO dto)
     {
-        var user = _users.Where(u => u.UserId == dto.UserId);
-        var author = _users.Where(a => a.UserId == dto.AuthorId);
-        if (user == null || author == null) return;
+        var user = await userManager.FindByIdAsync(dto.UserId);
+        var author = await userManager.FindByIdAsync(dto.UserId);;
+        if (user == null || author == null) return new BadRequestObjectResult("No such user or group");
         var subscriptions = _subscriptionAuthor.FirstOrDefault(s => 
             s.UserId == dto.UserId && s.AuthorId == dto.AuthorId);
         if (subscriptions == null)
@@ -116,7 +119,8 @@ public class SubscriptionAuthorRepository(ApplicationContext context):ISubscript
             subscriptions.IsActive = subscriptions.IsActive == true ? false : true;
             _subscriptionAuthor.Update(subscriptions);
         }
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
     public void SaveChanges()

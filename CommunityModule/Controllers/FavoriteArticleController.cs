@@ -17,7 +17,7 @@ public class FavoriteArticleController(IFavoriteArticleService favoriteArticleSe
 
     [Route("{id}")]
     [HttpGet]
-    public JsonResult GetUserFavoriteArticles(int id)
+    public JsonResult GetUserFavoriteArticles(string id)
     {
         var favoriteArticlesUser = favoriteArticleService.GetUserFavoriteArticles(id);
         return Json(favoriteArticlesUser);
@@ -25,10 +25,10 @@ public class FavoriteArticleController(IFavoriteArticleService favoriteArticleSe
 
     [Route("create")]
     [HttpPost]
-    public JsonResult InsertFavoriteArticle(CreateFavoriteArticleDTO dto)
+    public async Task<IActionResult> InsertFavoriteArticle(CreateFavoriteArticleDTO dto)
     {
-        favoriteArticleService.InsertFavoriteArticle(dto);
-        return Json("created");
+        Task<IActionResult> result = favoriteArticleService.InsertFavoriteArticle(dto);
+        return await result;
     }
 
     [Route("delete/{id}")]

@@ -1,13 +1,14 @@
 using DTO.CommentDTO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Repository.CommentRepository;
 
 public interface ICommentRepository
 {
-    CommentDTO Get(int Id);
+    CommentDTO Get(int id);
     List<CommentDTO> GetAll();
-    void Insert(CreateCommentDTO dto);
-    void Update(UpdateCommentDTO dto);
-    void Delete(int Id);
+    Task<IActionResult> Insert(CreateCommentDTO dto);
+    Task<IActionResult> Update(UpdateCommentDTO dto);
+    void Delete(int id);
     void SaveChanges();
 }

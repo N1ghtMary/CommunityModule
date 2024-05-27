@@ -1,4 +1,5 @@
 using DTO.StatisticsDTO;
+using Microsoft.AspNetCore.Mvc;
 using Repository.StatisticsRepository;
 
 namespace Services.StatisticsService;
@@ -12,7 +13,7 @@ public class StatisticsService(IStatisticsRepository statisticsRepository ):ISta
         return _statisticsRepository.GetAll();
     }
 
-    public List<StatisticsDTO> GetUserStatistics(int id)
+    public List<StatisticsDTO> GetUserStatistics(string id)
     {
         return _statisticsRepository.GetUsers(id);
     }
@@ -27,13 +28,13 @@ public class StatisticsService(IStatisticsRepository statisticsRepository ):ISta
      _statisticsRepository.ToggleLike(dto);   
     }*/
 
-    public void LikeArticle(ToggleStatisticsDTO dto)
+    public async Task<IActionResult> LikeArticle(ToggleStatisticsDTO dto)
     {
-        _statisticsRepository.LikeIt(dto);
+        return await _statisticsRepository.LikeIt(dto);
     }
-    public void DislikeArticle(ToggleStatisticsDTO dto)
+    public async Task<IActionResult> DislikeArticle(ToggleStatisticsDTO dto)
     {
-        _statisticsRepository.DislikeIt(dto);
+        return await _statisticsRepository.DislikeIt(dto);
     }
     public void DeleteStatistics(int id)
     {

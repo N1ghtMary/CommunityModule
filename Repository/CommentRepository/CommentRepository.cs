@@ -1,31 +1,41 @@
 using Data;
 using DTO.CommentDTO;
+using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.CommentRepository;
 
-public class CommentRepository(ApplicationContext context):ICommentRepository
+public class CommentRepository(UserManager<User> userManager,ApplicationContext context):ICommentRepository
 {
     private readonly ApplicationContext _context = context;
     private DbSet<Comments> _comments = context.Set<Comments>();
 
-    public CommentDTO Get(int Id)
+    public CommentDTO Get(int id)
     {
-        var comment = _comments.SingleOrDefault(c => c.CommentId == Id);
+        var comment = _comments
+            .Include(c=>c.User)
+            .SingleOrDefault(c => c.CommentId == id);
         if (comment == null) return null;
         return new CommentDTO
         {
             CommentId = comment.CommentId,
             CommentText = comment.CommentText,
             CommentPublicationDate = comment.CommentPublicationDate,
-            UserId = comment.UserId,
+            User = new ShowUserInfoDTO()
+            {
+                Email = comment.User.Email
+            },
             ArticleId = comment.ArticleId
         };
     }
 
     public List<CommentDTO> GetAll()
     {
-        var comments = _comments.ToList();
+        var comments = _comments
+            .Include(c=>c.User)
+            .ToList();
         List<CommentDTO> commentDtos = new List<CommentDTO>();
         foreach (var comment in comments)
         {
@@ -34,7 +44,10 @@ public class CommentRepository(ApplicationContext context):ICommentRepository
                 CommentId = comment.CommentId,
                 CommentText = comment.CommentText,
                 CommentPublicationDate = comment.CommentPublicationDate,
-                UserId = comment.UserId,
+                User = new ShowUserInfoDTO()
+                {
+                    Email = comment.User.Email
+                },
                 ArticleId = comment.ArticleId
             });   
         }
@@ -42,37 +55,42 @@ public class CommentRepository(ApplicationContext context):ICommentRepository
         return commentDtos;
     }
 
-    public void Insert(CreateCommentDTO dto)
+    public async Task<IActionResult> Insert(CreateCommentDTO dto)
     {
+        var author = await userManager.FindByEmailAsync(dto.User.Email);
+        if(author== null) return new BadRequestObjectResult("No such user");
         Comments comment = new Comments
         {
             CommentId = dto.CommentId,
             CommentText = dto.CommentText,
             CommentPublicationDate = dto.CommentPublicationDate,
-            UserId = dto.UserId,
+            UserId=author.Id,
             ArticleId = dto.ArticleId
         };
         _comments.Add(comment);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
-    public void Update(UpdateCommentDTO dto)
+    public async Task<IActionResult> Update(UpdateCommentDTO dto)
     {
+        var author = await userManager.FindByEmailAsync(dto.User.Email);
         var comment = _comments
             .SingleOrDefault(c => c.CommentId == dto.CommentId);
-        if (comment == null) return;
+        if (comment == null || author == null) return new BadRequestObjectResult("No such user or comment");
         comment.CommentId = dto.CommentId;
         comment.CommentText = dto.CommentText;
         comment.CommentPublicationDate = dto.CommentPublicationDate;
-        comment.UserId = dto.UserId;
+        comment.UserId = author.Id;
         comment.ArticleId = dto.ArticleId;
         _comments.Update(comment);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
-    public void Delete(int Id)
+    public void Delete(int id)
     {
-        var comment =_comments.SingleOrDefault(c => c.CommentId == Id);
+        var comment =_comments.SingleOrDefault(c => c.CommentId == id);
         if (comment == null) return;
         _comments.Remove(comment);
         context.SaveChanges();

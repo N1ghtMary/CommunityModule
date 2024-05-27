@@ -1,4 +1,5 @@
 using DTO.FavoriteArticleDTO;
+using Microsoft.AspNetCore.Mvc;
 using Repository.FavoriteArticleRepository;
 
 namespace Services.FavoriteArticleService;
@@ -12,14 +13,14 @@ public class FavoriteArticleService(IFavoriteArticleRepository favoriteArticleRe
         return _favoriteArticleRepository.GetAll();
     }
     
-    public List<FavoriteArticleDTO> GetUserFavoriteArticles(int id)
+    public List<FavoriteArticleDTO> GetUserFavoriteArticles(string id)
     {
         return _favoriteArticleRepository.GetUsers(id);
     }
 
-    public void InsertFavoriteArticle(CreateFavoriteArticleDTO dto)
+    public async Task<IActionResult> InsertFavoriteArticle(CreateFavoriteArticleDTO dto)
     {
-        _favoriteArticleRepository.Insert(dto);
+        return await _favoriteArticleRepository.Insert(dto);
     }
 
     public void DeleteFavoriteArticle(int id)

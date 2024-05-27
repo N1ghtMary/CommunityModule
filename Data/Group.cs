@@ -6,6 +6,7 @@ namespace Data;
 public class Group
 {
     public int GroupId { get; set; }
+    
     [MaxLength(20)]
     public string GroupName { get; set; }
     public int CategoryId { get; set; }

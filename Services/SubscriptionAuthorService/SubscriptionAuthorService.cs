@@ -1,4 +1,5 @@
 using DTO.SubscriptionAuthorDTO;
+using Microsoft.AspNetCore.Mvc;
 using Repository.SubscriptionAuthorRepository;
 
 namespace Services.SubscriptionAuthorService;
@@ -12,18 +13,18 @@ public class SubscriptionAuthorService(ISubscriptionAuthorRepository subscriptio
         return _subscriptionAuthorRepository.GetAll();
     }
 
-    public List<SubscriptionAuthorDTO> GetUserSubscriptions(int id)
+    public List<SubscriptionAuthorDTO> GetUserSubscriptions(string id)
     {
         return _subscriptionAuthorRepository.GetUsers(id);
     }
 
-    public List<SubscriptionAuthorDTO> GetAuthorSubscriptions(int id)
+    public List<SubscriptionAuthorDTO> GetAuthorSubscriptions(string id)
     {
         return _subscriptionAuthorRepository.GetAuthors(id);
     }
 
-    public void ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto)
+    public async Task<IActionResult> ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto)
     {
-        _subscriptionAuthorRepository.ToggleActive(dto);
+        return await _subscriptionAuthorRepository.ToggleActive(dto);
     }
 }

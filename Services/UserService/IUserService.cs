@@ -1,12 +1,14 @@
+using Data;
 using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace Services.UserService;
 
 public interface IUserService
 {
-    UserDTO GetUser(int Id);
-    List<UserDTO> GetUsers();
-    void InsertUser(CreateUserDTO dto);
+    Task<UserDTO> GetUser(string id);
+    Task<List<User>> GetUsers();
+    Task<IdentityResult> InsertUser(CreateUserDTO dto);
     void UpdateUser(UpdateUserDTO dto);
-    void DeleteUser(int Id);
+    void DeleteUser(string id);
 }

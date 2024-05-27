@@ -8,7 +8,7 @@ public class Statistics
     public int StatisticsId { get; set; }
     public int ArticleId { get; set; }
     public bool IsLike { get; set; }
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     
     public User User { get; set; }
     public Article Article { get; set; }

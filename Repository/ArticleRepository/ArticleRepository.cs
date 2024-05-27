@@ -2,20 +2,22 @@ using Data;
 using DTO.ArticleDTO;
 using DTO.GroupDTO;
 using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using Group = System.Text.RegularExpressions.Group;
 
 namespace Repository.ArticleRepository;
 
-public class ArticleRepository(ApplicationContext context):IArticleRepository
+public class ArticleRepository(UserManager<User> userManager,
+    ApplicationContext context):IArticleRepository
 {
     private readonly ApplicationContext _context = context;
     private DbSet<Article> _articles = context.Set<Article>();
     private DbSet<Comments> _comments = context.Set<Comments>();
     private DbSet<FavoriteArticle> _favoriteArticles = context.Set<FavoriteArticle>();
     private DbSet<Statistics> _statistics = context.Set<Statistics>();
-    private DbSet<User> _users = context.Set<User>();
+    //private DbSet<User> _users = context.Set<User>();
     private DbSet<Group> _groups = context.Set<Group>();
     
     public ArticleDTO Get(int id)
@@ -33,7 +35,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
              ArticlePublicationDate =article.ArticlePublicationDate,
              User = new ShowUserInfoDTO()
              {
-                 Login = article.Author.Login
+                 Email = article.Author.Email
              },
              Group = new ShowGroupInfoDTO()
              {
@@ -60,7 +62,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
                 ArticlePublicationDate =article.ArticlePublicationDate,
                 User = new ShowUserInfoDTO()
                 {
-                    Login = article.Author.Login
+                    Email = article.Author.Email
                 },
                 Group = new ShowGroupInfoDTO()
                 {
@@ -75,7 +77,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
 
     public async Task<IActionResult> Insert(CreateArticleDTO dto)
     {
-        var author = await _users.SingleOrDefaultAsync(a => a.Login == dto.User.Login);
+        var author = await userManager.FindByEmailAsync(dto.User.Email);
         var group = await _groups.SingleOrDefaultAsync(g => g.GroupName == dto.Group.GroupName);
         if(author== null) return new BadRequestObjectResult("No such user");
         if(group==null) return new BadRequestObjectResult("No such group");
@@ -84,7 +86,7 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
             Title = dto.Title,
             ArticleText =dto.ArticleText,
             ArticlePublicationDate =DateTime.Now,
-            UserId = author.UserId,
+            UserId = author.Id,
             GroupId = group.GroupId
             //Views =dto.Views
         };
@@ -96,14 +98,14 @@ public class ArticleRepository(ApplicationContext context):IArticleRepository
     public async Task<IActionResult> Update(UpdateArticleDTO dto)
     {
         var article = await _articles.SingleOrDefaultAsync(a => a.ArticleId == dto.ArticleId);
-        var author = await _users.SingleOrDefaultAsync(a => a.Login == dto.User.Login);
+        var author = await userManager.FindByEmailAsync(dto.User.Email);
         var group = await _groups.SingleOrDefaultAsync(g => g.GroupName == dto.Group.GroupName);
         if(author== null || group==null) return new BadRequestObjectResult("No such user or group");
         if (article == null) return new BadRequestObjectResult("No such article");
         article.Title = dto.Title;
         article.ArticleText = dto.ArticleText;
         article.ArticlePublicationDate = dto.ArticlePublicationDate;
-        article.UserId = author.UserId;
+        article.UserId = author.Id;
         article.GroupId = group.GroupId;
         article.Views = dto.Views;
         _articles.Update(article);

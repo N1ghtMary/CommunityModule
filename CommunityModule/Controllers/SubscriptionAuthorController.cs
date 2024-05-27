@@ -17,7 +17,7 @@ public class SubscriptionAuthorController(ISubscriptionAuthorService subscriptio
 
     [Route("users/{id}")]
     [HttpGet]
-    public JsonResult GetUserSubscriptions(int id)
+    public JsonResult GetUserSubscriptions(string id)
     {
         var subscriptions = subscriptionAuthorService.GetUserSubscriptions(id);
         return Json(subscriptions);
@@ -25,7 +25,7 @@ public class SubscriptionAuthorController(ISubscriptionAuthorService subscriptio
     
     [Route("authors/{id}")]
     [HttpGet]
-    public JsonResult GetAuthorSubscriptions(int id)
+    public JsonResult GetAuthorSubscriptions(string id)
     {
         var subscriptions = subscriptionAuthorService.GetAuthorSubscriptions(id);
         return Json(subscriptions);
@@ -33,9 +33,9 @@ public class SubscriptionAuthorController(ISubscriptionAuthorService subscriptio
     
     [Route("toggle")]
     [HttpPost]
-    public JsonResult ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto)
+    public async Task<IActionResult> ToggleActiveSubscriptions(ToggleSubscriptionAuthorDTO dto)
     {
-        subscriptionAuthorService.ToggleActiveSubscriptions(dto);
-        return Json("completed");
+        Task<IActionResult> result = subscriptionAuthorService.ToggleActiveSubscriptions(dto);
+        return await result;
     }
 }

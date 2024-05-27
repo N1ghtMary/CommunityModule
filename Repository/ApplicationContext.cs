@@ -1,9 +1,12 @@
 using Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
-public class ApplicationContext(DbContextOptions<ApplicationContext> options): DbContext(options)
+public class ApplicationContext(DbContextOptions<ApplicationContext> options): 
+    IdentityUserContext<User>(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -15,6 +18,8 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options): D
         new GroupMap(modelBuilder.Entity<Group>());
         new StatisticsMap(modelBuilder.Entity<Statistics>());
         new SubscriptionAuthorMap(modelBuilder.Entity<SubscriptionAuthor>());
-        new UserMap(modelBuilder.Entity<User>());
+        //new UserMap(modelBuilder.Entity<User>());
+        //modelBuilder.Entity<User>().Property(u => u.BirthDate);
+        //modelBuilder.Entity<User>().Property(u => u.);
     }
 }

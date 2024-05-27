@@ -7,8 +7,8 @@ public class SubscriptionAuthor
 {
     public int SubscriptionId { get; set; }
     public bool IsActive { get; set; }
-    public int AuthorId { get; set; }
-    public int UserId { get; set; }
+    public string AuthorId { get; set; }
+    public string UserId { get; set; }
     
     public User User { get; set; }
     public User Author { get; set; }

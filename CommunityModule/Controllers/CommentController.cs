@@ -25,18 +25,18 @@ public class CommentController(ICommentService commentService):Controller
     
     [Route("create")]
     [HttpPost]
-    public JsonResult CreateComment(CreateCommentDTO dto)
+    public async Task<IActionResult> CreateComment(CreateCommentDTO dto)
     {
-        commentService.InsertComment(dto);
-        return Json("created");
+        Task<IActionResult> result = commentService.InsertComment(dto);
+        return await result;
     }
     
     [Route("update")]
     [HttpPatch]
-    public JsonResult UpdateComment(UpdateCommentDTO dto)
+    public async Task<IActionResult> UpdateComment(UpdateCommentDTO dto)
     {
-        commentService.UpdateComment(dto);
-        return Json("updated");
+        Task<IActionResult> result = commentService.UpdateComment(dto);
+        return await result;
     }
     
     [Route("delete/{id}")]

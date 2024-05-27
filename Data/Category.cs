@@ -6,6 +6,7 @@ namespace Data;
 public class Category
 {
     public int CategoryId { get; set; }
+    
     [MaxLength(20)]
     public string CategoryName { get; set; }
     

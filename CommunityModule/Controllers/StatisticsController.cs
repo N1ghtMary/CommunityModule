@@ -17,7 +17,7 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
     
     [Route("users/{id}")]
     [HttpGet]
-    public JsonResult GetUserStatistics(int id)
+    public JsonResult GetUserStatistics(string id)
     {
         var statistics = statisticsService.GetUserStatistics(id);
         return Json(statistics);
@@ -33,18 +33,18 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
 
     [Route("like")]
     [HttpPatch]
-    public JsonResult LikeStatistics(ToggleStatisticsDTO dto)
+    public async Task<IActionResult> LikeStatistics(ToggleStatisticsDTO dto)
     {
-        statisticsService.LikeArticle(dto);
-        return Json("completed");
+        Task<IActionResult> result = statisticsService.LikeArticle(dto);
+        return await result;
     }
     
     [Route("dislike")]
     [HttpPatch]
-    public JsonResult DislikeStatistics(ToggleStatisticsDTO dto)
+    public async Task<IActionResult> DislikeStatistics(ToggleStatisticsDTO dto)
     {
-        statisticsService.DislikeArticle(dto);
-        return Json("completed");
+        Task<IActionResult> result = statisticsService.DislikeArticle(dto);
+        return await result;
     }
 
     [Route("delete/{id}")]

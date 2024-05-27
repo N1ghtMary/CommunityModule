@@ -1,20 +1,26 @@
 using System.Text.Json.Nodes;
 using Data;
 using DTO.StatisticsDTO;
+using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.StatisticsRepository;
 
-public class StatisticsRepository(ApplicationContext context):IStatisticsRepository
+public class StatisticsRepository(UserManager<User> userManager,
+    ApplicationContext context):IStatisticsRepository
 {
     private readonly ApplicationContext _context = context;
     private DbSet<Statistics> _statistics = context.Set<Statistics>();
-    private DbSet<User> _users = context.Set<User>();
+    //private DbSet<User> _users = context.Set<User>();
     private DbSet<Article> _articles = context.Set<Article>();
 
     public List<StatisticsDTO> GetAll()
     {
-        var statistics = _statistics.ToList();
+        var statistics = _statistics
+            .Include(s=>s.User)
+            .ToList();
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
         foreach (var statistic in statistics)
         {
@@ -23,16 +29,20 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
                 ArticleId = statistic.ArticleId,
-                UserId = statistic.UserId
+                User = new ShowUserInfoDTO()
+                {
+                    Email = statistic.User.Email
+                }
             });
         }
 
         return statisticsDtos;
     }
 
-    public List<StatisticsDTO> GetUsers(int id)
+    public List<StatisticsDTO> GetUsers(string id)
     {
-        var statiscticsUser = _statistics.Where(su => su.UserId == id);
+        var statiscticsUser = _statistics
+            .Include(su=>su.User).Where(su => su.UserId == id);
         if (statiscticsUser == null) return null;
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
         foreach (var statistic in statiscticsUser)
@@ -42,7 +52,10 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
                 ArticleId = statistic.ArticleId,
-                UserId = statistic.UserId
+                User = new ShowUserInfoDTO()
+                {
+                    Email = statistic.User.Email
+                }
             });
         }
 
@@ -51,7 +64,9 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
 
     public List<StatisticsDTO> GetArticles(int id)
     {
-        var statiscticsArticle = _statistics.Where(su => su.ArticleId == id);
+        var statiscticsArticle = _statistics
+            .Include(sa=>sa.User)
+            .Where(su => su.ArticleId == id);
         if (statiscticsArticle == null) return null;
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
         foreach (var statistic in statiscticsArticle)
@@ -61,7 +76,10 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
                 ArticleId = statistic.ArticleId,
-                UserId = statistic.UserId
+                User = new ShowUserInfoDTO()
+                {
+                    Email = statistic.User.Email
+                }
             });
         }
 
@@ -93,52 +111,62 @@ public class StatisticsRepository(ApplicationContext context):IStatisticsReposit
         context.SaveChanges();
     }*/
 
-   public void LikeIt(ToggleStatisticsDTO dto)
+   public async Task<IActionResult> LikeIt(ToggleStatisticsDTO dto)
     {
-        var user = _users.Where(u => u.UserId == dto.UserId);
+        var user =await userManager.FindByEmailAsync(dto.User.Email);
         var article = _articles.Where(a => a.ArticleId == dto.ArticleId);
-        if (user == null || article == null) return;
+        if (user == null || article == null) return new BadRequestObjectResult("No such user or article");
         var statistics = _statistics.FirstOrDefault(s => 
-            s.UserId == dto.UserId && s.ArticleId == dto.ArticleId);
+            s.User.Email == dto.User.Email && s.ArticleId == dto.ArticleId);
         if (statistics == null)
         {
             Statistics statisticsNew = new Statistics
             {
                 IsLike = true,
                 ArticleId = dto.ArticleId,
-                UserId = dto.UserId
+                UserId = user.Id
             };
             _statistics.Add(statisticsNew);
+        }
+        else if (statistics.IsLike == false)
+        {
+            statistics.IsLike = true;
         }
         else
         {
             _statistics.Remove(statistics);
         }
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
-    public void DislikeIt(ToggleStatisticsDTO dto)
+    public async Task<IActionResult> DislikeIt(ToggleStatisticsDTO dto)
     {
-        var user = _users.Where(u => u.UserId == dto.UserId);
+        var user = await userManager.FindByEmailAsync(dto.User.Email);
         var article = _articles.Where(a => a.ArticleId == dto.ArticleId);
-        if (user == null || article == null) return;
+        if (user == null || article == null) return new BadRequestObjectResult("No such user or article");;
         var statistics = _statistics.FirstOrDefault(s => 
-            s.UserId == dto.UserId && s.ArticleId == dto.ArticleId);
+            s.User.Email == dto.User.Email && s.ArticleId == dto.ArticleId);
         if (statistics == null)
         {
             Statistics statisticsNew = new Statistics
             {
                 IsLike = false,
                 ArticleId = dto.ArticleId,
-                UserId = dto.UserId
+                UserId = user.Id
             };
             _statistics.Add(statisticsNew);
+        }
+        else if (statistics.IsLike == true)
+        {
+            statistics.IsLike = false;
         }
         else
         {
             _statistics.Remove(statistics);
         }
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
     public void Delete(int id)

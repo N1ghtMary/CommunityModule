@@ -1,4 +1,5 @@
 using DTO.CommentDTO;
+using Microsoft.AspNetCore.Mvc;
 using Repository.CommentRepository;
 
 namespace Services.CommentService;
@@ -17,18 +18,18 @@ public class CommentService(ICommentRepository commentRepository) : ICommentServ
         return _commentRepository.GetAll();
     }
 
-    public void InsertComment(CreateCommentDTO dto)
+    public async Task<IActionResult> InsertComment(CreateCommentDTO dto)
     {
-        _commentRepository.Insert(dto);
+        return await _commentRepository.Insert(dto);
     }
 
-    public void UpdateComment(UpdateCommentDTO dto)
+    public async Task<IActionResult> UpdateComment(UpdateCommentDTO dto)
     {
-        _commentRepository.Update(dto);
+        return await _commentRepository.Update(dto);
     }
 
-    public void DeleteComment(int Id)
+    public void DeleteComment(int id)
     {
-        _commentRepository.Delete(Id);
+        _commentRepository.Delete(id);
     }
 }

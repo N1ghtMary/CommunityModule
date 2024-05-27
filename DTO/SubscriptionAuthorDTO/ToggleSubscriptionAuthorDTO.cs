@@ -2,6 +2,6 @@ namespace DTO.SubscriptionAuthorDTO;
 
 public class ToggleSubscriptionAuthorDTO
 {
-    public int AuthorId { get; set; }
-    public int UserId { get; set; }
+    public string AuthorId { get; set; }
+    public string UserId { get; set; }
 }

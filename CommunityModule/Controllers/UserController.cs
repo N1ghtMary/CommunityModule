@@ -10,25 +10,25 @@ public class UserController(IUserService userService):Controller
 {
     [Route("{id}")]
     [HttpGet]
-    public JsonResult GetUser(int id)
+    public async Task<JsonResult> GetUser(Guid id)
     {
-        var user = userService.GetUser(id);
-        return Json(user);
+        var user = await userService.GetUser(id.ToString());
+        return  Json(user);
     }
     
     [HttpGet]
-    public JsonResult GetUsers()
+    public async Task<JsonResult> GetUsers()
     {
-        var users = userService.GetUsers();
+        var users = await userService.GetUsers();
         return Json(users);
     }
     
     [Route("create")]
     [HttpPost]
-    public JsonResult CreateUser(CreateUserDTO dto)
+    public async Task<JsonResult> CreateUser(CreateUserDTO dto)
     {
-        userService.InsertUser(dto);
-        return Json("created");
+        var result = await userService.InsertUser(dto);
+        return Json(result);
     }
     
     [Route("update")]
@@ -41,7 +41,7 @@ public class UserController(IUserService userService):Controller
     
     [Route("delete/{id}")]
     [HttpDelete]
-    public JsonResult DeleteUser(int id)
+    public JsonResult DeleteUser(string id)
     {
         userService.DeleteUser(id);
         return Json("deleted");

@@ -1,19 +1,25 @@
 using Data;
 using DTO.FavoriteArticleDTO;
+using DTO.UserDTO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.FavoriteArticleRepository;
 
-public class FavoriteArticleRepository(ApplicationContext context):IFavoriteArticleRepository
+public class FavoriteArticleRepository(UserManager<User> userManager,
+    ApplicationContext context):IFavoriteArticleRepository
 {
     private readonly ApplicationContext _context = context;
     private DbSet<FavoriteArticle> _favoritearticle = context.Set<FavoriteArticle>();
-    private DbSet<User> _users = context.Set<User>();
+    //private DbSet<User> _users = context.Set<User>();
     private DbSet<Article> _articles = context.Set<Article>();
 
     public List<FavoriteArticleDTO> GetAll()
     {
-        var favorites = _favoritearticle.ToList();
+        var favorites = _favoritearticle
+            .Include(fa=>fa.User)
+            .ToList();
         List<FavoriteArticleDTO> favoriteDtos = new List<FavoriteArticleDTO>();
         foreach (var favorite in favorites)
         {
@@ -21,16 +27,21 @@ public class FavoriteArticleRepository(ApplicationContext context):IFavoriteArti
             {
                 FavoriteId = favorite.FavoriteId,
                 ArticleId = favorite.ArticleId,
-                UserId = favorite.UserId
+                User = new ShowUserInfoDTO()
+                {
+                    Email = favorite.User.Email
+                }
             });
         }
 
         return favoriteDtos;
     }
 
-    public List<FavoriteArticleDTO> GetUsers(int id)
+    public List<FavoriteArticleDTO> GetUsers(string id)
     {
-        var favoritesUser = _favoritearticle.Where(fu => fu.UserId == id);
+        var favoritesUser = _favoritearticle
+            .Include(fa=>fa.User)
+            .Where(fu => fu.UserId == id);
         if (favoritesUser == null) return null;
         List<FavoriteArticleDTO> favoriteDtos = new List<FavoriteArticleDTO>();
         foreach (var favorite in favoritesUser)
@@ -39,32 +50,36 @@ public class FavoriteArticleRepository(ApplicationContext context):IFavoriteArti
             {
                 FavoriteId = favorite.FavoriteId,
                 ArticleId = favorite.ArticleId,
-                UserId = favorite.UserId
+                User = new ShowUserInfoDTO()
+                {
+                    Email = favorite.User.Email
+                }
             });
         }
 
         return favoriteDtos;
     }
 
-    public void Insert(CreateFavoriteArticleDTO dto)
+    public async Task<IActionResult> Insert(CreateFavoriteArticleDTO dto)
     {
-        var user = _users.Where(u => u.UserId == dto.UserId);
+        var author = await userManager.FindByEmailAsync(dto.User.Email);
         var article = _articles.Where(a => a.ArticleId == dto.ArticleId);
-        if (user == null || article == null) return;
+        if (author == null || article == null) return new BadRequestObjectResult("No such user or article");
         var favorites = _favoritearticle.FirstOrDefault(s => 
-            s.UserId == dto.UserId && s.ArticleId == dto.ArticleId);
+            s.User.Email == dto.User.Email && s.ArticleId == dto.ArticleId);
         if (favorites == null)
         {
             FavoriteArticle favoriteArticle = new FavoriteArticle
             {
                 ArticleId = dto.ArticleId,
-                UserId = dto.UserId,
+                UserId = author.Id,
             };
             _favoritearticle.Add(favoriteArticle);
         }
         else _favoritearticle.Remove(favorites);
 
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
     public void Delete(int id)
