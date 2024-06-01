@@ -35,7 +35,8 @@ public class ArticleRepository(UserManager<User> userManager,
              ArticlePublicationDate =article.ArticlePublicationDate,
              User = new ShowUserInfoDTO()
              {
-                 Email = article.Author.Email
+                 Login = article.Author.Login
+                // Email = article.Author.Email
              },
              Group = new ShowGroupInfoDTO()
              {
@@ -62,7 +63,8 @@ public class ArticleRepository(UserManager<User> userManager,
                 ArticlePublicationDate =article.ArticlePublicationDate,
                 User = new ShowUserInfoDTO()
                 {
-                    Email = article.Author.Email
+                    Login = article.Author.Login
+                   // Email = article.Author.Email
                 },
                 Group = new ShowGroupInfoDTO()
                 {
@@ -77,10 +79,11 @@ public class ArticleRepository(UserManager<User> userManager,
 
     public async Task<IActionResult> Insert(CreateArticleDTO dto)
     {
+       // var author = await userManager.FindByEmailAsync(dto.User.Email);
         var author = await userManager.FindByEmailAsync(dto.User.Email);
         var group = await _groups.SingleOrDefaultAsync(g => g.GroupName == dto.Group.GroupName);
-        if(author== null) return new BadRequestObjectResult("No such user");
-        if(group==null) return new BadRequestObjectResult("No such group");
+        if(author== null || group == null) return new BadRequestObjectResult("No such user or group");
+       // if(group==null) return new BadRequestObjectResult("No such group");
         Article article = new Article
         {
             Title = dto.Title,

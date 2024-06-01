@@ -1,3 +1,4 @@
+using DTO.ArticleDTO;
 using DTO.UserDTO;
 
 namespace DTO.CommentDTO;
@@ -9,5 +10,5 @@ public class CommentDTO
     public DateTime CommentPublicationDate { get; set; }
     //public string UserId { get; set; }
     public ShowUserInfoDTO User { get; set; }
-    public int ArticleId { get; set; }
+    public ShowArticleInfoDTO Article { get; set; }
 }

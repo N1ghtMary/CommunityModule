@@ -1,6 +1,7 @@
 using Data;
 using DTO.UserDTO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Repository.UserRepository;
 
 namespace Services.UserService;
@@ -24,11 +25,16 @@ public class UserService(IUserRepository userRepository) : IUserService
         return await _userRepository.Insert(dto);
     }
 
-    public void UpdateUser(UpdateUserDTO dto)
+    public async Task<IActionResult> UpdateUser(UpdateUserDTO dto)
     {
-        _userRepository.Update(dto);
+        return await _userRepository.Update(dto);
     }
 
+    public async Task<IActionResult> ChangePassword(ChangePasswordUserDTO dto)
+    {
+        return await _userRepository.ChangePassword(dto);
+    }
+    
     public void DeleteUser(string id)
     {
         _userRepository.Delete(id);

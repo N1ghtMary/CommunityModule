@@ -15,7 +15,7 @@ public class CreateArticleDTO
     //[RegularExpression("[0-9]{4}-[0-9]{2}-[0-9]{2}",ErrorMessage = "Неверно введена дата публикации")]
    // public DateTime ArticlePublicationDate { get; set; }
     [Required (ErrorMessage = "Поле \"Идентификатор пользователя\" обязательно для заполнения")]
-    public ShowUserInfoDTO User { get; set; }
+    public EmailUserDTO User { get; set; }
    // public int UserId { get; set; }
    [Required(ErrorMessage = "Поле \"Идентификатор группы\" обязательно для заполнения")]
    public ShowGroupInfoDTO Group { get; set; }

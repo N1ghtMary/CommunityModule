@@ -1,6 +1,7 @@
 using Data;
 using DTO.UserDTO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository.UserRepository;
@@ -25,6 +26,7 @@ public class UserRepository(UserManager<User> userManager,
         //var user = _users.SingleOrDefault(u => u.Id == id);
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
+        
         return new UserDTO
         {
             UserId = user.Id,
@@ -71,7 +73,7 @@ public class UserRepository(UserManager<User> userManager,
             BirthDate = dto.BirthDate,
             City = dto.City,
             Email = dto.Email,
-            //Login = dto.Login,
+            Login = dto.Login,
             //Password = dto.Password,
             PhoneNumber = dto.PhoneNumber
         };
@@ -82,22 +84,32 @@ public class UserRepository(UserManager<User> userManager,
         //context.SaveChanges();
     }
 
-    public void Update(UpdateUserDTO dto)
+    public async Task<IActionResult> Update(UpdateUserDTO dto)
     {
-        
-        var user = _users.SingleOrDefault(u => u.Id == dto.UserId);
-        if (user == null) return;
+        var user = await userManager.FindByIdAsync(dto.UserId);
+        if (user == null) return new NotFoundResult();
         user.UserName = dto.UserFullName;
         user.BirthDate = dto.BirthDate;
         user.City = dto.City;
         user.Email = dto.Email;
-       // user.Login = dto.Login;
-        //user. = dto.Password;
+        user.Login = dto.Login;
         user.PhoneNumber = dto.PhoneNumber;
-        _users.Update(user);
-        context.SaveChanges();
+        await userManager.UpdateAsync(user);
+        await context.SaveChangesAsync();
+        return new OkResult();
     }
 
+    public async Task<IActionResult> ChangePassword(ChangePasswordUserDTO dto)
+    {
+        var user = await userManager.FindByEmailAsync(dto.Email);
+        if (user == null) return new NotFoundResult();
+        if(dto.NewPassword==dto.OldPassword) return new BadRequestObjectResult("New password must be different");
+        var result = await userManager
+            .ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
+        if (result.Succeeded) return new OkResult();
+        else return new BadRequestObjectResult("Something went wrong");
+    }
+    
     public void Delete(string id)
     {
         var user =_users.SingleOrDefault(u => u.Id == id);

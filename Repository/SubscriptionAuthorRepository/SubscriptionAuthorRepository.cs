@@ -11,7 +11,6 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
     ApplicationContext context):ISubscriptionAuthorRepository
 {
     //TODO Check author must write articles. If user has no articles he can't be author
-    //TODO If toggle to false dont show subscriptions and likes
     private readonly ApplicationContext _context = context;
     private DbSet<SubscriptionAuthor> _subscriptionAuthor = context.Set<SubscriptionAuthor>();
     //private DbSet<User> _users = context.Set<User>();
@@ -23,8 +22,6 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
             .Include(su=>su.User)
             .ToList();
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
-        //TODO add author include and his email
-        
         
         foreach (var subscription in subscriptions)
         {
@@ -39,12 +36,12 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
                 AuthorId = subscription.AuthorId,
                 Author = new ShowUserInfoDTO()
                 {
-                    Email = subscription.Author.Email
+                    Login = subscription.Author.Login
                 },
                 UserId = subscription.UserId,
                 User = new ShowUserInfoDTO()
                 {
-                    Email = subscription.User.Email
+                    Login = subscription.User.Login
                 }
             });
         }
@@ -54,7 +51,10 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
 
     public List<SubscriptionAuthorDTO> GetUsers(string id)
     {
-        var subscriptionsUser = _subscriptionAuthor.Where(su => su.UserId == id);
+        var subscriptionsUser = _subscriptionAuthor
+            .Include(sa=>sa.Author)
+            .Include(su=>su.User)
+            .Where(su => su.UserId == id);
         if (subscriptionsUser == null) return null;
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
         foreach (var subscription in subscriptionsUser)
@@ -66,7 +66,15 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
                     SubscriptionId = subscription.SubscriptionId,
                     IsActive = subscription.IsActive,
                     AuthorId = subscription.AuthorId,
-                    UserId = subscription.UserId
+                    Author = new ShowUserInfoDTO()
+                    {
+                        Login = subscription.Author.Login
+                    },
+                    UserId = subscription.UserId,
+                    User = new ShowUserInfoDTO()
+                    {
+                        Login = subscription.User.Login
+                    }
                 });
             }
         }
@@ -77,6 +85,8 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
     public List<SubscriptionAuthorDTO> GetAuthors(string id)
     {
         var subscriptionsAuthor = _subscriptionAuthor
+            .Include(sa=>sa.Author)
+            .Include(su=>su.User)
             .Where(sa => sa.AuthorId == id);
         if (subscriptionsAuthor == null) return null;
         List<SubscriptionAuthorDTO> subscriptionsDtos = new List<SubscriptionAuthorDTO>();
@@ -89,28 +99,38 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
                     SubscriptionId = subscription.SubscriptionId,
                     IsActive = subscription.IsActive,
                     AuthorId = subscription.AuthorId,
-                    UserId = subscription.UserId
+                    Author = new ShowUserInfoDTO()
+                    {
+                        Login = subscription.Author.Email
+                    },
+                    UserId = subscription.UserId,
+                    User = new ShowUserInfoDTO()
+                    {
+                        Login = subscription.User.Email
+                    }
                 });
             }
         }
 
         return subscriptionsDtos;
     }
-
+    
     public async Task<IActionResult> ToggleActive(ToggleSubscriptionAuthorDTO dto)
     {
-        var user = await userManager.FindByIdAsync(dto.UserId);
-        var author = await userManager.FindByIdAsync(dto.UserId);;
+        var user = await userManager.FindByEmailAsync(dto.User.Email);
+        var author = await userManager.FindByIdAsync(dto.Author.Email);;
         if (user == null || author == null) return new BadRequestObjectResult("No such user or group");
         var subscriptions = _subscriptionAuthor.FirstOrDefault(s => 
-            s.UserId == dto.UserId && s.AuthorId == dto.AuthorId);
+            s.User.Email == dto.User.Email && s.Author.Email == dto.Author.Email);
+        if (user.Id == author.Id)
+            return new BadRequestObjectResult("You can't subscribe yourself but u r still perfect");
         if (subscriptions == null)
         {
             SubscriptionAuthor subscriptionsNew = new SubscriptionAuthor
             {
                 IsActive = true,
-                AuthorId = dto.AuthorId,
-                UserId = dto.UserId
+                AuthorId = author.Id,
+                UserId = user.Id
             };
             _subscriptionAuthor.Add(subscriptionsNew);
         }

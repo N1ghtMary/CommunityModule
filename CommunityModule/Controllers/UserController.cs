@@ -1,4 +1,5 @@
 using DTO.UserDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.UserService;
 
@@ -16,6 +17,7 @@ public class UserController(IUserService userService):Controller
         return  Json(user);
     }
     
+    [Authorize]
     [HttpGet]
     public async Task<JsonResult> GetUsers()
     {
@@ -31,12 +33,20 @@ public class UserController(IUserService userService):Controller
         return Json(result);
     }
     
-    [Route("update")]
+    [Route("update/updateUserInfo")]
     [HttpPatch]
-    public JsonResult UpdateUser(UpdateUserDTO dto)
+    public async Task<JsonResult> UpdateUser(UpdateUserDTO dto)
     {
-        userService.UpdateUser(dto);
-        return Json("updated");
+        var result = await userService.UpdateUser(dto);
+        return Json(result);
+    }
+
+    [Route("update/updatePassword")]
+    [HttpPatch]
+    public async Task<JsonResult> UpdatePassword(ChangePasswordUserDTO dto)
+    {
+        var result = await userService.ChangePassword(dto);
+        return Json(result);
     }
     
     [Route("delete/{id}")]

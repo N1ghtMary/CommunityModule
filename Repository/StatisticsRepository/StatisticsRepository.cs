@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Data;
+using DTO.ArticleDTO;
 using DTO.StatisticsDTO;
 using DTO.UserDTO;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ public class StatisticsRepository(UserManager<User> userManager,
     {
         var statistics = _statistics
             .Include(s=>s.User)
+            .Include(a=>a.Article)
             .ToList();
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
         foreach (var statistic in statistics)
@@ -28,10 +30,14 @@ public class StatisticsRepository(UserManager<User> userManager,
             {
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
-                ArticleId = statistic.ArticleId,
+                Article = new ShowArticleInfoDTO()
+                {
+                    Author = statistic.Article.Author.Login,
+                    Title = statistic.Article.Title
+                },
                 User = new ShowUserInfoDTO()
                 {
-                    Email = statistic.User.Email
+                    Login = statistic.User.Login
                 }
             });
         }
@@ -42,7 +48,9 @@ public class StatisticsRepository(UserManager<User> userManager,
     public List<StatisticsDTO> GetUsers(string id)
     {
         var statiscticsUser = _statistics
-            .Include(su=>su.User).Where(su => su.UserId == id);
+            .Include(su=>su.User)
+            .Include(a=>a.Article)
+            .Where(su => su.UserId == id);
         if (statiscticsUser == null) return null;
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
         foreach (var statistic in statiscticsUser)
@@ -51,10 +59,14 @@ public class StatisticsRepository(UserManager<User> userManager,
             {
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
-                ArticleId = statistic.ArticleId,
+                Article = new ShowArticleInfoDTO()
+                {
+                    Author = statistic.Article.Author.Login,
+                    Title = statistic.Article.Title
+                },
                 User = new ShowUserInfoDTO()
                 {
-                    Email = statistic.User.Email
+                    Login = statistic.User.Login
                 }
             });
         }
@@ -66,6 +78,7 @@ public class StatisticsRepository(UserManager<User> userManager,
     {
         var statiscticsArticle = _statistics
             .Include(sa=>sa.User)
+            .Include(a=>a.Article)
             .Where(su => su.ArticleId == id);
         if (statiscticsArticle == null) return null;
         List<StatisticsDTO> statisticsDtos = new List<StatisticsDTO>();
@@ -75,10 +88,14 @@ public class StatisticsRepository(UserManager<User> userManager,
             {
                 StatisticsId = statistic.StatisticsId,
                 IsLike = statistic.IsLike,
-                ArticleId = statistic.ArticleId,
+                Article = new ShowArticleInfoDTO()
+                {
+                    Author = statistic.Article.Author.Login,
+                    Title = statistic.Article.Title
+                },
                 User = new ShowUserInfoDTO()
                 {
-                    Email = statistic.User.Email
+                    Login = statistic.User.Login
                 }
             });
         }

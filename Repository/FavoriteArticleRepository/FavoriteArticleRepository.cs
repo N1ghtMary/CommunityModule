@@ -1,4 +1,5 @@
 using Data;
+using DTO.ArticleDTO;
 using DTO.FavoriteArticleDTO;
 using DTO.UserDTO;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ public class FavoriteArticleRepository(UserManager<User> userManager,
     {
         var favorites = _favoritearticle
             .Include(fa=>fa.User)
+            .Include(a=>a.Article)
             .ToList();
         List<FavoriteArticleDTO> favoriteDtos = new List<FavoriteArticleDTO>();
         foreach (var favorite in favorites)
@@ -26,10 +28,14 @@ public class FavoriteArticleRepository(UserManager<User> userManager,
             favoriteDtos.Add(new FavoriteArticleDTO
             {
                 FavoriteId = favorite.FavoriteId,
-                ArticleId = favorite.ArticleId,
+                Article = new ShowArticleInfoDTO()
+                {
+                    Author = favorite.Article.Author.Login,
+                    Title = favorite.Article.Title
+                },
                 User = new ShowUserInfoDTO()
                 {
-                    Email = favorite.User.Email
+                    Login = favorite.User.Email
                 }
             });
         }
@@ -41,6 +47,7 @@ public class FavoriteArticleRepository(UserManager<User> userManager,
     {
         var favoritesUser = _favoritearticle
             .Include(fa=>fa.User)
+            .Include(a=>a.Article)
             .Where(fu => fu.UserId == id);
         if (favoritesUser == null) return null;
         List<FavoriteArticleDTO> favoriteDtos = new List<FavoriteArticleDTO>();
@@ -49,10 +56,14 @@ public class FavoriteArticleRepository(UserManager<User> userManager,
             favoriteDtos.Add(new FavoriteArticleDTO
             {
                 FavoriteId = favorite.FavoriteId,
-                ArticleId = favorite.ArticleId,
+                Article = new ShowArticleInfoDTO()
+                {
+                    Author = favorite.Article.Author.Login,
+                    Title = favorite.Article.Title
+                },
                 User = new ShowUserInfoDTO()
                 {
-                    Email = favorite.User.Email
+                    Login = favorite.User.Email
                 }
             });
         }

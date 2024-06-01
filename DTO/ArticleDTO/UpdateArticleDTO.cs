@@ -11,7 +11,7 @@ public class UpdateArticleDTO
     public DateTime ArticlePublicationDate { get; set; }
     //public int UserId { get; set; }
     //public int GroupId { get; set; }
-    public ShowUserInfoDTO User { get; set; }
+    public EmailUserDTO User { get; set; }
     public ShowGroupInfoDTO Group { get; set; }
     public int Views { get; set; }
 }

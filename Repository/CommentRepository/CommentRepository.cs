@@ -1,4 +1,5 @@
 using Data;
+using DTO.ArticleDTO;
 using DTO.CommentDTO;
 using DTO.UserDTO;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ public class CommentRepository(UserManager<User> userManager,ApplicationContext 
     {
         var comment = _comments
             .Include(c=>c.User)
+            .Include(a=>a.Article)
             .SingleOrDefault(c => c.CommentId == id);
         if (comment == null) return null;
         return new CommentDTO
@@ -25,9 +27,13 @@ public class CommentRepository(UserManager<User> userManager,ApplicationContext 
             CommentPublicationDate = comment.CommentPublicationDate,
             User = new ShowUserInfoDTO()
             {
-                Email = comment.User.Email
+                Login = comment.User.Login
             },
-            ArticleId = comment.ArticleId
+            Article = new ShowArticleInfoDTO()
+            {
+                Title = comment.Article.Title,
+                Author = comment.Article.Author.Login
+            }
         };
     }
 
@@ -46,9 +52,13 @@ public class CommentRepository(UserManager<User> userManager,ApplicationContext 
                 CommentPublicationDate = comment.CommentPublicationDate,
                 User = new ShowUserInfoDTO()
                 {
-                    Email = comment.User.Email
+                    Login = comment.User.Login
                 },
-                ArticleId = comment.ArticleId
+                Article = new ShowArticleInfoDTO()
+                {
+                    Title = comment.Article.Title,
+                    Author = comment.Article.Author.Login
+                }
             });   
         }
 

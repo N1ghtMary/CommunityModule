@@ -9,14 +9,14 @@ public class User:IdentityUser
    // public int UserId { get; set; }
     //[MaxLength(60)]
    // public string UserFullName { get; set; }
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
     [MaxLength(20)]
     public string City { get; set; }
     //[MaxLength(40)]
     //public string Email { get; set; }
     //public long PhoneNumber { get; set; }//
-//[MaxLength(20)]
-    //public string Login { get; set; }
+    [MaxLength(20)]
+    public string Login { get; set; }
     //[MaxLength(30)]
    // public string Password { get; set; }//
 
