@@ -1,4 +1,5 @@
 using DTO.GroupDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.GroupService;
 
@@ -23,6 +24,7 @@ public class GroupController(IGroupService groupService):Controller
         return Json(groups);
     }
     
+    [Authorize]
     [Route("create")]
     [HttpPost]
     public JsonResult CreateGroup(CreateGroupDTO dto)
@@ -31,6 +33,7 @@ public class GroupController(IGroupService groupService):Controller
         return Json("created");
     }
     
+    [Authorize]
     [Route("update")]
     [HttpPatch]
     public JsonResult UpdateGroup(UpdateGroupDTO dto)
@@ -39,6 +42,7 @@ public class GroupController(IGroupService groupService):Controller
         return Json("updated");
     }
     
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public JsonResult DeleteGroup(int id)

@@ -9,6 +9,7 @@ namespace CommunityModule.Controllers;
 [Route("users")]
 public class UserController(IUserService userService):Controller
 {
+    [Authorize]
     [Route("{id}")]
     [HttpGet]
     public async Task<JsonResult> GetUser(Guid id)
@@ -25,6 +26,7 @@ public class UserController(IUserService userService):Controller
         return Json(users);
     }
     
+    
     [Route("create")]
     [HttpPost]
     public async Task<JsonResult> CreateUser(CreateUserDTO dto)
@@ -33,6 +35,7 @@ public class UserController(IUserService userService):Controller
         return Json(result);
     }
     
+    [Authorize]
     [Route("update/updateUserInfo")]
     [HttpPatch]
     public async Task<JsonResult> UpdateUser(UpdateUserDTO dto)
@@ -41,6 +44,7 @@ public class UserController(IUserService userService):Controller
         return Json(result);
     }
 
+    [Authorize]
     [Route("update/updatePassword")]
     [HttpPatch]
     public async Task<JsonResult> UpdatePassword(ChangePasswordUserDTO dto)
@@ -49,6 +53,7 @@ public class UserController(IUserService userService):Controller
         return Json(result);
     }
     
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public JsonResult DeleteUser(string id)

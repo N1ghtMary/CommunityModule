@@ -1,9 +1,11 @@
 using DTO.FavoriteArticleDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.FavoriteArticleService;
 
 namespace CommunityModule.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("favoritearticles")]
 public class FavoriteArticleController(IFavoriteArticleService favoriteArticleService):Controller

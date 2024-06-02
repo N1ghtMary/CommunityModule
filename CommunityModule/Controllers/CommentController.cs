@@ -1,4 +1,5 @@
 using DTO.CommentDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.CommentService;
 
@@ -23,6 +24,7 @@ public class CommentController(ICommentService commentService):Controller
         return Json(comments);
     }
     
+    [Authorize]
     [Route("create")]
     [HttpPost]
     public async Task<IActionResult> CreateComment(CreateCommentDTO dto)
@@ -31,6 +33,7 @@ public class CommentController(ICommentService commentService):Controller
         return await result;
     }
     
+    [Authorize]
     [Route("update")]
     [HttpPatch]
     public async Task<IActionResult> UpdateComment(UpdateCommentDTO dto)
@@ -39,6 +42,7 @@ public class CommentController(ICommentService commentService):Controller
         return await result;
     }
     
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public JsonResult DeleteComment(int id)

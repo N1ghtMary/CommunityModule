@@ -1,4 +1,5 @@
 using DTO.StatisticsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.StatisticsService;
 
@@ -8,6 +9,7 @@ namespace CommunityModule.Controllers;
 [Route("statistics")]
 public class StatisticsController(IStatisticsService statisticsService):Controller
 {
+    [Authorize]
     [HttpGet]
     public JsonResult GetStatistics()
     {
@@ -15,6 +17,7 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
         return Json(statistics);
     }
     
+    [Authorize]
     [Route("users/{id}")]
     [HttpGet]
     public JsonResult GetUserStatistics(string id)
@@ -31,6 +34,7 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
         return Json(statistics);
     }
 
+    [Authorize]
     [Route("like")]
     [HttpPatch]
     public async Task<IActionResult> LikeStatistics(ToggleStatisticsDTO dto)
@@ -39,6 +43,7 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
         return await result;
     }
     
+    [Authorize]
     [Route("dislike")]
     [HttpPatch]
     public async Task<IActionResult> DislikeStatistics(ToggleStatisticsDTO dto)
@@ -47,6 +52,7 @@ public class StatisticsController(IStatisticsService statisticsService):Controll
         return await result;
     }
 
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public JsonResult DeleteStatistics(int id)

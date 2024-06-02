@@ -1,9 +1,11 @@
 using DTO.SubscriptionAuthorDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.SubscriptionAuthorService;
 
 namespace CommunityModule.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("subscriptionauthor")]
 public class SubscriptionAuthorController(ISubscriptionAuthorService subscriptionAuthorService):Controller

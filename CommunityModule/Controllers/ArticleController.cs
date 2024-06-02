@@ -1,4 +1,5 @@
 using DTO.ArticleDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Services.ArticleService;
@@ -26,6 +27,7 @@ public class ArticleController(IArticleService articleService):Controller
         return Json(articles);
     }
     
+    [Authorize]
     [Route("create")]
     [HttpPost]
     public async Task<IActionResult> CreateArticle(CreateArticleDTO dto)
@@ -35,6 +37,7 @@ public class ArticleController(IArticleService articleService):Controller
         return await result;
     }
     
+    [Authorize]
     [Route("update")]
     [HttpPatch]
     public async Task<IActionResult> UpdateArticle(UpdateArticleDTO dto)
@@ -42,7 +45,8 @@ public class ArticleController(IArticleService articleService):Controller
         Task<IActionResult> result = articleService.UpdateArticle(dto);
         return await result;
     }
-
+    
+    [Authorize]
     [Route("increaseViews/{id}")]
     [HttpPatch]
     public async Task<IActionResult> IncreaseViewArticle(int id)
@@ -52,6 +56,7 @@ public class ArticleController(IArticleService articleService):Controller
         return await result;
     }
     
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public async Task<IActionResult> DeleteArticle(int id)

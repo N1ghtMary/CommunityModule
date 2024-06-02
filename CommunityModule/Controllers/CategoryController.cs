@@ -1,4 +1,5 @@
 using DTO.CategoryDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.CategoryService;
 
@@ -8,6 +9,7 @@ namespace CommunityModule.Controllers;
 [Route("categories")]
 public class CategoryController(ICategoryService categoryService):Controller
 {
+    [Authorize]
     [Route("{id}")]
     [HttpGet]
     public JsonResult GetCategory(int id)
@@ -17,6 +19,7 @@ public class CategoryController(ICategoryService categoryService):Controller
         return Json(category);
     }
     
+    [Authorize]
     [HttpGet]
     public JsonResult GetCategories()
     {
@@ -24,6 +27,7 @@ public class CategoryController(ICategoryService categoryService):Controller
         return Json(categories);
     }
     
+    [Authorize]
     [Route("create")]
     [HttpPost]
     public JsonResult CreateCategory(CreateCategoryDTO dto)
@@ -32,6 +36,7 @@ public class CategoryController(ICategoryService categoryService):Controller
         return Json("created");
     }
     
+    [Authorize]
     [Route("update")]
     [HttpPatch]
     public JsonResult UpdateCategory(UpdateCategoryDTO dto)
@@ -40,6 +45,7 @@ public class CategoryController(ICategoryService categoryService):Controller
         return Json("updated");
     }
     
+    [Authorize]
     [Route("delete/{id}")]
     [HttpDelete]
     public JsonResult DeleteCategory(int id)

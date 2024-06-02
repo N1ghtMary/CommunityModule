@@ -84,8 +84,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidAudience = "booksapi.lan", //builder.Configuration["Jwt:Audience"],
-                ValidIssuer = "booksapi.lan", //builder.Configuration["Jwt:Issuer"],
+                ValidAudience = "commodul.lan", //builder.Configuration["Jwt:Audience"],
+                ValidIssuer = "commodul.lan", //builder.Configuration["Jwt:Issuer"],
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
             };
