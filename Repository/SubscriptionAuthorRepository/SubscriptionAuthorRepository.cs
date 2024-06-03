@@ -101,12 +101,12 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
                     AuthorId = subscription.AuthorId,
                     Author = new ShowUserInfoDTO()
                     {
-                        Login = subscription.Author.Email
+                        Login = subscription.Author.Login
                     },
                     UserId = subscription.UserId,
                     User = new ShowUserInfoDTO()
                     {
-                        Login = subscription.User.Email
+                        Login = subscription.User.Login
                     }
                 });
             }
@@ -118,8 +118,8 @@ public class SubscriptionAuthorRepository(UserManager<User> userManager,
     public async Task<IActionResult> ToggleActive(ToggleSubscriptionAuthorDTO dto)
     {
         var user = await userManager.FindByEmailAsync(dto.User.Email);
-        var author = await userManager.FindByIdAsync(dto.Author.Email);;
-        if (user == null || author == null) return new BadRequestObjectResult("No such user or group");
+        var author = await userManager.FindByEmailAsync(dto.Author.Email);;
+        if (user == null || author == null) return new BadRequestObjectResult("No such user");
         var subscriptions = _subscriptionAuthor.FirstOrDefault(s => 
             s.User.Email == dto.User.Email && s.Author.Email == dto.Author.Email);
         if (user.Id == author.Id)

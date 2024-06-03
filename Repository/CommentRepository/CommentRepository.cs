@@ -41,6 +41,7 @@ public class CommentRepository(UserManager<User> userManager,ApplicationContext 
     {
         var comments = _comments
             .Include(c=>c.User)
+            .Include(a=>a.Article)
             .ToList();
         List<CommentDTO> commentDtos = new List<CommentDTO>();
         foreach (var comment in comments)
@@ -73,7 +74,7 @@ public class CommentRepository(UserManager<User> userManager,ApplicationContext 
         {
             CommentId = dto.CommentId,
             CommentText = dto.CommentText,
-            CommentPublicationDate = dto.CommentPublicationDate,
+            CommentPublicationDate = DateTime.Now,//dto.CommentPublicationDate,
             UserId=author.Id,
             ArticleId = dto.ArticleId
         };

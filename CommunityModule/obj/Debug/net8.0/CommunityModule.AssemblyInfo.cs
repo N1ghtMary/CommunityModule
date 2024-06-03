@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b77c6cd43a0f9830b7bbd7c0a13e39b96233de9e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18d55315afad9acc73779de0749554b424812a71")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommunityModule")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

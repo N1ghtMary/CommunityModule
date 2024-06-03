@@ -34,7 +34,7 @@ public class UserRepository(UserManager<User> userManager,
             BirthDate = user.BirthDate,
             City = user.City,
             Email = user.Email,
-            //Login = dto.Login,
+            Login = user.Login,
             //Password = dto.Password,
             PhoneNumber = user.PhoneNumber
         };
